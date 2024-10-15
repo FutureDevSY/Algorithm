@@ -16,9 +16,7 @@ class Solution {
                     
                 }
             }
-            for(int j=0; j<canSpeak.length; j++){
-                str = str.replace(" ", "");
-            }     
+            str = str.replace(" ", ""); 
             
             if(str.length() == 0) answer++;
         }
