@@ -7,50 +7,38 @@ public class Main {
 
       public static void main(String[] args) throws IOException {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            int N, M;
             StringTokenizer st = new StringTokenizer(br.readLine());
+            int N, M;
             N = Integer.parseInt(st.nextToken());
             M = Integer.parseInt(st.nextToken());
 
-            int[][] sumArr = new int[N + 1][N + 1];
             int[][] nums = new int[N + 1][N + 1];
+            int[][] sumNums = new int[N + 1][N + 1];
 
             for(int i=1; i<=N; i++){
                   st = new StringTokenizer(br.readLine());
-                  for(int j=1; j<=N; j++){
-                        nums[i][j] = Integer.parseInt(st.nextToken());
+                  for (int j = 1; j <= N; j++) {
+                        sumNums[i][j] = Integer.parseInt(st.nextToken());
+                        sumNums[i][j] += sumNums[i - 1][j];
+                        sumNums[i][j] += sumNums[i][j - 1];
+                        sumNums[i][j] -= sumNums[i - 1][j - 1];
                   }
             }
 
-            for(int i=1; i<=N; i++){
-                  for(int j=1; j<=N; j++){
-                        sumArr[j][i] = nums[j][i] + sumArr[j-1][i];
-                  }
-            }
-
-            int sx, sy;
-            int ex, ey;
-            int sum = 0;
-            for(int i=0; i<M; i++){
+            int sx, sy, ex, ey;
+            int result;
+            for (int i = 0; i < M; i++) {
                   st = new StringTokenizer(br.readLine());
-
                   sx = Integer.parseInt(st.nextToken());
                   sy = Integer.parseInt(st.nextToken());
                   ex = Integer.parseInt(st.nextToken());
                   ey = Integer.parseInt(st.nextToken());
 
-                  sum = 0;
-                  for(int j=sy; j<=ey; j++){
-                        sum += sumArr[ex][j];
-                  }
-                  for(int j=sy; j<=ey; j++){
-                        sum -= sumArr[sx - 1][j];
-                  }
+                  result = sumNums[ex][ey] - (sumNums[ex][sy - 1]
+                      + sumNums[sx - 1][ey] - sumNums[sx - 1][sy - 1]);
+                  System.out.println(result);
 
-                  System.out.println(sum);
             }
-
-
       }
 
 }
