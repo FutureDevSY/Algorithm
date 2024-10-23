@@ -1,60 +1,49 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
 
       public static void main(String[] args) throws IOException {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            int N, H;
+            int N, H;   //길이, 높이
             StringTokenizer st = new StringTokenizer(br.readLine());
             N = Integer.parseInt(st.nextToken());
             H = Integer.parseInt(st.nextToken());
 
-            int[] up = new int[N / 2];
-            int[] down = new int[N / 2];
+            int[] bottom = new int[H + 2];      //석순
+            int[] top = new int[H + 2];         //종유석
+            int tmpA, tmpB;
+            for (int i = 0; i < N/2; i++) {
+                  tmpA = Integer.parseInt(br.readLine());
+                  tmpB = Integer.parseInt(br.readLine());
+                  bottom[tmpA] = bottom[tmpA] + 1;
+                  top[H - tmpB + 1] = top[H - tmpB + 1] + 1;
+            }
+            
+            int[] preSum = new int[H + 2];
+            for (int i = H; i >= 1; i--) {
+                  bottom[i] = bottom[i + 1] + bottom[i];
+            }
 
-            int dCnt = 0;
-            int uCnt = 0;
-            for(int i=0; i<N; i++){
-                  if(i != 1 && i % 2 == 0){
-                        down[dCnt++] = Integer.parseInt(br.readLine());
-                  }else{
-                        up[uCnt++] = Integer.parseInt(br.readLine());
+            for (int i = 1; i <= H; i++) {
+                  top[i] = top[i - 1] + top[i];
+            }
+
+            int minBreakCnt = 0;
+            int minBreak = Integer.MAX_VALUE;
+            for (int i=1; i<=H; i++) {
+                  if(minBreak > bottom[i] + top[i]){
+                        minBreak = bottom[i] + top[i];
+                        minBreakCnt = 1;
+                  }else if(minBreak == bottom[i] + top[i]){
+                        minBreakCnt++;
                   }
             }
 
-            Arrays.sort(up);
-            Arrays.sort(down);
-
-            int tmp = 0;
-            int minBreak = Integer.MAX_VALUE;
-            int minCnt = 0;
-            for(int i=1; i<=H; i++){
-                  tmp =
-                      lowerBound(0, up.length, up, i) +
-                          lowerBound(0, down.length, down,H - i + 1);
-                  if(tmp < minBreak){
-                        minBreak = tmp;
-                        minCnt = 1;
-                  }else if(tmp == minBreak) minCnt++;
-            }
-
-            System.out.println(minBreak + " " + minCnt);
-
-
+            System.out.println(minBreak + " " + minBreakCnt);
       }
 
-      static int lowerBound(int left, int right, int[] arr, int height){
-            int mid = 0;
-            while(left < right){
-                  mid = (left + right) / 2;
-                  if(arr[mid] < height) left = mid + 1;
-                  else right = mid;
-            }
-            return arr.length - left;
-      }
 
 }
