@@ -10,7 +10,6 @@ class Solution {
     static int ord;
     
     public int recur(String word, StringBuilder sb, int wordLng){
-        System.out.println(sb.toString() + " " + ord);
         if(wordLng == sb.length()){
             if(sb.toString().equals(word)){
                 return ord;
